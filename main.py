@@ -2,6 +2,7 @@ import math as m
 import numpy as np
 import matplotlib.pyplot as plt
 from pid_file import pid_class
+from random import uniform
 
 t=0
 angle = 3*m.pi/180
@@ -20,18 +21,18 @@ t_list = list()
 angle_list = list()
 
 pid = pid_class(h, 0, 500, 10, 300)
-
+#pid = pid_class(h, 0, 5, 10,10)
 
 
 def f1(t,ang,sp):
     return sp
 
 def f2(t,ang,sp):
-    return moment - c_kr * sp - c_dv * pid.gen_signal(ang)
+    return uniform(-5, 5) - c_kr * sp - c_dv * pid.gen_signal(ang)
 
 
 
-while t < 2:
+while t < 3:
 
     angle_list.append(angle)
     t_list.append(t)
