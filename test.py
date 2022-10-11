@@ -16,7 +16,7 @@ q = np.zeros(4)
 t_list = list()
 angle_list = list()
 
-pid = pid_class(h, 0, 20, 1, 40)
+pid = pid_class(h, 0, 20, 0.1, 40)
 
 
 
@@ -24,7 +24,7 @@ def f1(t,ang,sp):
     return sp
 
 def f2(t,ang,sp):
-    return 0.05*m.sin(ang)-pid.gen_signal(ang)-sp*0.01+uniform(-1, 5)
+    return 0.05*m.sin(ang)-pid.gen_signal(ang)-sp*0.01+uniform(-1, 1)
 
 
 
