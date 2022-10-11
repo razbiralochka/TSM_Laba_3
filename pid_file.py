@@ -1,3 +1,4 @@
+import math as m
 class pid_class():
     def __init__(self, dt_,goal_,kp_,ki_,kd_):
         self._goal = goal_
@@ -12,8 +13,10 @@ class pid_class():
         self._sumErr += err * self._dt
         d_err = (err - self._prevErr)/self._dt
         self._prevErr = err
-
+        print(d_err)
         signal = self._kp * err + self._ki * self._sumErr + self._kd * d_err
+
+
 
         return signal
 

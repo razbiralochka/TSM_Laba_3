@@ -5,34 +5,30 @@ from pid_file import pid_class
 from random import uniform
 
 t=0
-angle = 3*m.pi/180
-h = 0.001
+angle =  m.pi
+h = 0.01
 omega = 0
 
 k = np.zeros(4)
 q = np.zeros(4)
 
-c_kr = 0.1
-c_dv =1.5
-moment = 0.04
-
 
 t_list = list()
 angle_list = list()
 
-pid = pid_class(h, 0, 500, 10, 300)
-#pid = pid_class(h, 0, 100, 4,40)
+pid = pid_class(h, 0, 20, 1, 40)
+
 
 
 def f1(t,ang,sp):
     return sp
 
 def f2(t,ang,sp):
-    return moment+uniform(-0.1, 0.1) - c_kr * sp - c_dv * pid.gen_signal(ang)
+    return 0.05*m.sin(ang)-pid.gen_signal(ang)-sp*0.01+uniform(-1, 5)
 
 
 
-while t < 1.5:
+while t < 5:
 
     angle_list.append(angle)
     t_list.append(t)
