@@ -5,7 +5,7 @@ from pid_file import pid_class
 from random import uniform
 
 t=0
-angle = 10*m.pi/180
+angle = m.radians(10)
 h = 0.001
 omega = 0
 
@@ -20,37 +20,43 @@ moment = 0.04
 t_list = list()
 angle_list = list()
 
-pid = pid_class(h, 0, 500, 10, 300)
+pid = pid_class(h, 0, 400, 10, 30)
 #pid = pid_class(h, 0, 0, 0,0)
 
 
-def f1(t,ang,sp):
-    return sp
+vars = np.array([omega, angle])
+k = np.zeros((2, 4))
 
-def f2(t,ang,sp):
-    return moment+uniform(-50, 50) - c_kr * sp - c_dv * pid.gen_signal(ang)
+def equs(args):
+
+    omega = args[0]
+    angle = args[1]
+
+    d_ang = omega
+    d_speed = moment+uniform(-50, 50) - c_kr * omega - c_dv * pid.gen_signal(angle)
+
+    res = np.array([d_speed, d_ang])
+    return res
 
 
 
-while t < 1.5:
-
-    angle_list.append(angle*180/m.pi)
+while t < 2:
     t_list.append(t)
-    k[0] = h * f1(t,angle,omega)
-    q[0] = h * f2(t,angle,omega)
-    k[1] = h * f1(t+h/2,angle+k[0]/2,omega+q[0]/2)
-    q[1] = h * f2(t+h/2,angle+k[0]/2,omega+q[0]/2)
-    k[2] = h * f1(t+h/2,angle+k[1]/2,omega+q[1]/2)
-    q[2] = h * f2(t+h/2,angle+k[1]/2,omega+q[1]/2)
-    k[3] = h * f1(t+h,angle+k[2],omega+q[2])
-    q[3] = h * f2(t+h,angle+k[2],omega+q[2])
-    angle = angle + (k[0]+2*k[1]+2*k[2]+k[3])/6
-    omega = omega + (q[0]+2*q[1]+2*q[2]+q[3])/6
-    t = t + h
+    angle_list.append(vars[1])
+    k[:, 0] = equs(vars)
+    k[:, 1] = equs(vars + k[:, 0] * h / 2) * 2
+    k[:, 2] = equs(vars + k[:, 1] * h / 2) * 2
+    k[:, 3] = equs(vars + k[:, 2] * h)
+
+    k *= h / 6
+    dvars = np.array([sum(elem) for elem in k])
+    vars += dvars
+    t += h
 
 
 
-plt.plot(t_list, angle_list)
+
+plt.plot(t_list, angle_list, color = 'red')
 plt.xlabel('Время (с)')
 plt.ylabel('Угол по крену (гр.)')
 plt.grid()
