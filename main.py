@@ -20,7 +20,7 @@ moment = 0.04
 t_list = list()
 angle_list = list()
 
-pid = pid_class(h, 0, 400, 10, 30)
+pid = pid_class(h, 0, 30, 0.1, 5)
 #pid = pid_class(h, 0, 0, 0,0)
 
 
@@ -33,16 +33,16 @@ def equs(args):
     angle = args[1]
 
     d_ang = omega
-    d_speed = moment+uniform(-50, 50) - c_kr * omega - c_dv * pid.gen_signal(angle)
+    d_speed = moment+uniform(-5, 5) - c_kr * omega - c_dv * pid.gen_signal(angle)
 
     res = np.array([d_speed, d_ang])
     return res
 
 
 
-while t < 2:
+while t < 6:
     t_list.append(t)
-    angle_list.append(vars[1])
+    angle_list.append(m.degrees(vars[1]))
     k[:, 0] = equs(vars)
     k[:, 1] = equs(vars + k[:, 0] * h / 2) * 2
     k[:, 2] = equs(vars + k[:, 1] * h / 2) * 2
